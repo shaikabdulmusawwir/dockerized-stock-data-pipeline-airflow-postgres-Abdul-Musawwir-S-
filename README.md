@@ -2,7 +2,7 @@
 
 This project implements a Dockerized data pipeline that automatically fetches stock market data from a public API, parses it, and stores it in a PostgreSQL database, orchestrated by Apache Airflow. It is designed to satisfy an internship technical assignment requiring a robust, containerized ETL pipeline.  
 
-## 🎯 Objectives
+## Objectives
 
 - Fetch JSON stock data from a free API (e.g., Alpha Vantage) on a schedule (daily or hourly).  
 - Parse the API response and extract relevant fields (symbol, price, volume, timestamp, etc.).  
@@ -11,7 +11,7 @@ This project implements a Dockerized data pipeline that automatically fetches st
 - Use environment variables for API keys and database credentials.  
 - Start the whole system with a single `docker compose up` command.  
 
-## 🧱 Architecture
+##  Architecture
 
 - **Apache Airflow (Docker container)**  
   - Hosts the scheduler and webserver.  
@@ -27,7 +27,7 @@ This project implements a Dockerized data pipeline that automatically fetches st
 
 All services run as containers managed by Docker Compose.  
 
-## 📁 Project Structure
+##  Project Structure
 
 .
 ├── docker-compose.yml
@@ -40,3 +40,4 @@ All services run as containers managed by Docker Compose.
 └── scripts/
 ├── init.py
 └── fetch_and_load.py
+
