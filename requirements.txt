@@ -1,0 +1,12 @@
+# HTTP requests to stock API
+requests==2.32.3
+
+# PostgreSQL driver
+psycopg2-binary==2.9.10
+
+# Optional: better logging/typing tools if you use them
+python-dotenv==1.0.1
+
+FROM apache/airflow:2.9.3
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt

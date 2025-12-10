@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: stock_postgres
+    environment:
+      POSTGRES_USER: stockuser
+      POSTGRES_PASSWORD: stockpass
+      POSTGRES_DB: stocksdb
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./init_db.sql:/docker-entrypoint-initdb.d/init_db.sql
+
+  airflow:
+    image: apache/airflow:2.9.3
+    container_name: airflow
+    depends_on:
+      - postgres
+    environment:
+      AIRFLOW__CORE__EXECUTOR: LocalExecutor
+      AIRFLOW__CORE__LOAD_EXAMPLES: "false"
+      AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: "false"
+      AIRFLOW__CORE__FERNET_KEY: "somethingrandom"
+
+      # Database Airflow will connect to
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://stockuser:stockpass@postgres/stocksdb
+
+      # Your stock DB credentials (for your Python script)
+      STOCK_DB_HOST: postgres
+      STOCK_DB_PORT: 5432
+      STOCK_DB_NAME: stocksdb
+      STOCK_DB_USER: stockuser
+      STOCK_DB_PASSWORD: stockpass
+
+      ALPHAVANTAGE_API_KEY: ${ALPHAVANTAGE_API_KEY}
+
+    volumes:
+      - ./dags:/opt/airflow/dags
+      - ./scripts:/opt/airflow/scripts
+
+    ports:
+      - "8080:8080"
+
+    command: >
+      bash -c "
+      airflow db init &&
+      airflow users create --username admin --password admin --firstname admin --lastname admin --role Admin --email admin@example.com &&
+      airflow webserver & airflow scheduler
+      "
+
+volumes:
+  postgres-data:
